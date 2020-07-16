@@ -8,7 +8,7 @@ func cal(a, b int) (r1, r2 int) {
 	return 
 }
 func main() {
-	mul, add := cal(2, 3)
+	mul, add := cal(3, 4)
 	fmt.Println("Hello mul: ", mul)
 	fmt.Println("Hello add: ", add)
 }
