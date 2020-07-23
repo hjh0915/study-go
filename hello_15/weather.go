@@ -107,13 +107,13 @@ func main(){
 		"南京": "101190101"}
 
 	var wg sync.WaitGroup
-	for _,value := range cmap {
-		// 开N个后台打印线程
-		for i := 0; i < len(cmap); i++ {
-			wg.Add(1)
+	// 开N个后台打印线程
+	for i := 0; i < len(cmap); i++ {
+		wg.Add(1)
 
+		time.Sleep(2 * time.Second)
+		for _,value := range cmap {
 			go getWeather(value)
-			wg.Done()
 		}
 	}
 	// 等待N个后台线程完成
