@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"time"
-	"sync"
+	// "sync"
 )
 
 const (
@@ -92,8 +92,6 @@ func getWeather(citycode string) {
 }
 
 func main(){
-	startTime := time.Now() // 获取当前时间
-
 	var cmap map[string]string 
 	cmap = map[string]string {
 		"天津": "101030100",
@@ -105,20 +103,15 @@ func main(){
 		"杭州": "101210101",
 		"苏州": "101190401",
 		"南京": "101190101"}
-
-	var wg sync.WaitGroup
-	// 开N个后台打印线程
-	for i := 0; i < len(cmap); i++ {
-		wg.Add(1)
-
-		time.Sleep(2 * time.Second)
-		for _,value := range cmap {
-			go getWeather(value)
-		}
-	}
-	// 等待N个后台线程完成
-	wg.Wait()
 	
+	startTime := time.Now() // 获取当前时间
+	
+	for _,value := range cmap {
+		go getWeather(value)
+	}
+
+	time.Sleep(1 * time.Second)
+
 	endTime := time.Now()
     diff := endTime.Sub(startTime)
     fmt.Println("该函数执行完成耗时：", diff.Seconds(), "s")

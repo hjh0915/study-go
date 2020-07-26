@@ -1,14 +1,9 @@
 并发获取天气
 ==========
 ```go
-var wg sync.WaitGroup
-for i := 0; i < len(cmap); i++ {
-    wg.Add(1)
-    
-    go func()
-    wg.Done()
+for _,value := range cmap {
+    go getWeather(value)
 }
-wg.Wait()
+time.Sleep(1 * time.Second)
 ```
-
-尚存在输出问题
+把时间延迟放在go func()后面，是对于函数的延迟
