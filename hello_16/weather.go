@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"time"
-	// "sync"
+	"sync"
 )
 
 const (
@@ -66,7 +66,7 @@ type Index struct {
 	Desc string `json:"desc"`
 }
 
-func getWeather(citycode string, done chan bool) {
+func getWeather(citycode string, wg *sync.WaitGroup) {
 	url := fmt.Sprintf("%s&cityid=%s&appid=%s&appsecret=%s",URL,citycode,appid,appsecret)
 	resp, err := http.Get(url)
 	if err != nil {
@@ -90,11 +90,12 @@ func getWeather(citycode string, done chan bool) {
 			weather.City, weather.Data[0].Date, weather.Data[0].Tem, weather.Data[0].Wea)
 	}
 
-	done <- true
+	wg.Done()
 }
 
 func main(){ 
-	done := make(chan bool, 9)
+
+	var wg sync.WaitGroup
 
 	var cmap map[string]string 
 	cmap = map[string]string {
@@ -111,12 +112,11 @@ func main(){
 	startTime := time.Now() // 获取当前时间
 	
 	for _, value := range cmap {
-		go getWeather(value, done)
+		wg.Add(1)
+		go getWeather(value, &wg)
 	}
 
-	for v := range done {
-		fmt.Println(v)
-	}
+	wg.Wait()
 	
 	// time.Sleep(1 * time.Second)
 

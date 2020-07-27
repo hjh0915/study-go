@@ -1,13 +1,12 @@
-并发获取天气(done)
-================
+并发获取天气(waitgroup)
+=====================
 ```go
-done := make(chan bool, 9)
+wg.Done()
+
 for _, value := range cmap {
-    go getWeather(value, done)
+    wg.Add(1)
+    go getWeather(value, &wg)
 }
 
-for v := range done {
-    fmt.Println(v)
-}
+wg.Wait()
 ```
-尚存问题
